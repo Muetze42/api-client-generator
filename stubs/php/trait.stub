@@ -1,0 +1,10 @@
+<?php
+
+namespace {namespace};
+
+{imports}
+
+trait {name}Trait
+{
+{methods}
+}
