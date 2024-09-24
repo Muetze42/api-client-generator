@@ -101,8 +101,9 @@ abstract class AbstractOpenApiParser extends AbstractParser
                     continue;
                 }
 
+                $methodName = (new Cast($data['operationId']))->toString();
                 $instance = new MethodResource(
-                    name: (new Cast($data['operationId']))->toString(),
+                    name: $methodName,
                     path: (new Cast($path))->toString(),
                     method: (new Cast($method))->toString(),
                     returnType: $data['produces'],
@@ -111,9 +112,82 @@ abstract class AbstractOpenApiParser extends AbstractParser
 
                 $this->resolveArguments($instance, (new Cast($data['parameters']))->toArray());
 
+                if ($response = $this->resolveResponse(data_get($data, 'responses.200.schema'), $methodName)) {
+                    $instance->response($response);
+                }
+
                 $this->resource->addMethod($instance);
             }
         }
+    }
+
+    protected function resolveResponse(?array $schema, string $methodName): mixed
+    {
+        if (empty($schema)) {
+            return null;
+        }
+
+        return $this->resolveResponseSchema($schema, $methodName);
+    }
+
+    protected function resolveResponseSchema(array $schema, string $methodName): mixed
+    {
+        if (isset($schema['$ref'])) {
+            return $this->resolveResponse($this->definitions[basename($schema['$ref'])], $methodName);
+        }
+
+        /**
+         * @Todo: Mixed types - https://swagger.io/docs/specification/data-models/data-types/#mixed-type
+         *
+         * @Todo: Null - https://swagger.io/docs/specification/data-models/data-types/#null
+         */
+
+        return match ($schema['type']) {
+            'object' => ['type' => 'object', 'properties' => $this->resolveResponseObject($schema, $methodName)],
+            'array' => ['type' => 'array', 'properties' => $this->resolveResponseArray($schema, $methodName)],
+            'boolean' => 'bool',
+            'string' => 'string', // @Todo: Enums - https://swagger.io/docs/specification/data-models/enums/
+            'number' => $this->resolveResponseNumber($schema, $methodName),
+            'integer' => $this->resolveResponseNumber($schema, $methodName, 'integer'),
+            default => throw new RuntimeException(
+                sprintf('Could not resolve response for method "%s".', $methodName)
+            ),
+        };
+    }
+
+    protected function resolveResponseNumber(array $schema, string $methodName, string $type = 'number'): string
+    {
+        if (empty($schema['format'])) {
+            return $type === 'number' ? 'float' : 'int';
+        }
+
+        return match ($schema['format']) {
+            'float', 'double' => 'float',
+            'int32', 'int64' => 'int',
+            default => throw new RuntimeException(
+                sprintf('Could not resolve response number for method "%s".', $methodName)
+            ),
+        };
+    }
+
+    protected function resolveResponseArray(array $schema, string $methodName): mixed
+    {
+        //dd($schema['items']);
+        //dd($this->resolveResponseSchema($schema['items'], $methodName));
+        return $this->resolveResponseSchema($schema['items'], $methodName);
+        dd($schema['items']['$ref']);
+        //$schema['items']['$ref'];
+        dd($methodName);
+    }
+
+    protected function resolveResponseObject(array $schema, string $methodName): mixed
+    {
+        $result = [];
+        foreach ($schema['properties'] as $key => $property) {
+            $result[$key] = $this->resolveResponseSchema($property, $methodName);
+        }
+
+        return $result;
     }
 
     /**

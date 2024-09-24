@@ -39,6 +39,13 @@ class MethodResource
     public array $arguments;
 
     /**
+     * A optional response.
+     *
+     * @var mixed|null
+     */
+    public mixed $response = null;
+
+    /**
      * Create a new ApiMethod instance.
      *
      * @param  list<\NormanHuth\ApiGenerator\Resources\ArgumentResource>  $arguments
@@ -57,6 +64,19 @@ class MethodResource
         $this->returnType = $returnType;
         $this->summary = $summary;
         $this->arguments = $arguments;
+    }
+
+    /**
+     * Set a optional response
+     *
+     * @param  mixed  $response
+     * @return $this
+     */
+    public function response(mixed $response): static
+    {
+        $this->response = $response;
+
+        return $this;
     }
 
     /**
