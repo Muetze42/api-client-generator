@@ -114,10 +114,17 @@ trait ResolveMethodTrait
             $path = substr($path, 0, -5);
         }
 
-        $this->traitImports[$trait][] = Str::ucfirst($methodResource->name) . 'Response';
+        $isJson = in_array('application/json', $methodResource->returnType);
+
+        $response = $isJson ?
+            $this->getNamespace(['Responses', Str::ucfirst($methodResource->name) . 'Response']) :
+            'Illuminate\Http\Client\Response';
+
+        $this->traitImports[$trait][] = $response;
         $this->traits[$trait][] = $this->storage->stub('php/trait-method', [
             'name' => $methodResource->name,
             'Name' => Str::ucfirst($methodResource->name),
+            'response' => class_basename($response),
             'method' => $methodResource->method,
             'summary' => $summary,
             'path' => $path,

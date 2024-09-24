@@ -56,10 +56,9 @@ class LaravelHttpGenerator extends AbstractGenerator
     protected function writeTraits(): void
     {
         collect($this->traits)->each(function (array $methods, string $trait) {
-            $imports = $this->traitImports[$trait];
+            $imports = array_unique($this->traitImports[$trait]);
             sort($imports);
-            $imports = array_map(fn (string $response) => 'use ' .
-                $this->getNamespace(['Responses', $response]) . ';', $imports);
+            $imports = array_map(fn (string $response) => 'use ' . $response . ';', $imports);
 
             $this->storage->write('php/trait', 'Concerns\\' . $trait . 'Trait.php', [
                 'imports' => implode("\n", $imports),
