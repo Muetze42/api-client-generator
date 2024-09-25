@@ -9,6 +9,26 @@ use NormanHuth\ApiGenerator\Resources\MethodResource;
 trait GeneratorTrait
 {
     /**
+     * @var array<string, mixed>
+     */
+    protected array $traits = [];
+
+    /**
+     * @var array<int|string, mixed>
+     */
+    protected array $traitImports = [];
+
+    /**
+     * @var string
+     */
+    protected string $defaultResponse = 'Illuminate\Http\Client\Response';
+
+    /**
+     * @var array<string, mixed>
+     */
+    protected array $responses = [];
+
+    /**
      * @param  \NormanHuth\ApiGenerator\Resources\MethodResource  $methodResource
      * @return void
      *
@@ -114,11 +134,15 @@ trait GeneratorTrait
             $path = substr($path, 0, -5);
         }
 
-        $isJson = in_array('application/json', $methodResource->returnType);
+        $isJson = in_array('application/json', $methodResource->returnType) && ! is_null($methodResource->response);
 
         $response = $isJson ?
             $this->getNamespace(['Responses', Str::ucfirst($methodResource->name) . 'Response']) :
-            'Illuminate\Http\Client\Response';
+            $this->defaultResponse;
+
+        if ($response != $this->defaultResponse) {
+            $this->responses[$response] = $methodResource->response;
+        }
 
         $this->traitImports[$trait][] = $response;
         $this->traits[$trait][] = $this->storage->stub('php/trait-method', [
@@ -132,6 +156,44 @@ trait GeneratorTrait
             'arguments' => implode(', ', $arguments),
             'params' => implode("\n", array_map(fn (string $param) => '     * @param  ' . $param, $params)),
         ]);
+    }
+
+    public function phpDoc(array|string $data, $level = 0): string
+    {
+        if (is_string($data)) {
+            return $data . ",\n";
+        }
+
+        $pre = "\t *";
+
+        $content = 'array{';
+        if (isset($data['type']) && $data['type'] == 'array') {
+            $content = 'array{array-key, array{';
+            $level++;
+        }
+
+        $properties = $data['properties'] ?? $data;
+
+        foreach ($properties as $key => $value) {
+            $content .= "\n";
+            $content .= $pre . str_repeat("\t", ($level ?: 1));
+            $content .= $key . ': ';
+            $content .= is_string($value) ? $value : $this->phpDoc($value, $level + 1);
+            $content .= ',';
+        }
+
+        $content .= "\n" . $pre;
+        if ($level) {
+            $content .= str_repeat("\t", $level);
+        }
+        $content .= ' }';
+
+        if (isset($data['type']) && $data['type'] == 'array') {
+            $content .= "\n" . $pre;
+            $content .= str_repeat("\t", $level - 1) . '}';
+        }
+
+        return str_replace('*}', '* }', $content);
     }
 
     /**

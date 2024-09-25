@@ -4,7 +4,7 @@ namespace NormanHuth\ApiGenerator\Generators\Tests;
 
 use NormanHuth\ApiGenerator\Concerns\GeneratorTrait;
 
-abstract class AbstractTestsGenerator
+abstract class AbstractTestGenerator
 {
     use GeneratorTrait;
 }

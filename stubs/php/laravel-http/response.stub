@@ -15,4 +15,20 @@ class {name} extends Response
     {
         parent::__construct($response->toPsrResponse());
     }
+
+    /**
+     * Get the JSON decoded body of the response as an array.
+     *
+     * @return null|{phpdoc}
+     */
+    public function array(): ?array
+    {
+        if (! $this->successful()) {
+            return null;
+        }
+
+        $data = $this->json();
+
+        return is_array($data) ? $data : null;
+    }
 }

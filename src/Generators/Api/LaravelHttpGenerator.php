@@ -12,16 +12,6 @@ class LaravelHttpGenerator extends AbstractGenerator
     use GeneratorTrait;
 
     /**
-     * @var array<string, mixed>
-     */
-    protected array $traits = [];
-
-    /**
-     * @var array<int|string, mixed>
-     */
-    protected array $traitImports = [];
-
-    /**
      * Generate the HTTP client from the given content.
      *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
@@ -39,12 +29,18 @@ class LaravelHttpGenerator extends AbstractGenerator
     protected function writeResponses(): void
     {
         collect($this->traitImports)->flatten()->unique()->each(function (string $response) {
+            if ($response == $this->defaultResponse) {
+                return;
+            }
+            $phpdoc = $this->phpDoc($this->responses[$response]);
+
             $this->storage->write(
                 'php/laravel-http/response',
-                'Responses\\' . $response . '.php',
+                'Responses\\' . class_basename($response) . '.php',
                 [
                     'namespace' => $this->getNamespace('Responses'),
-                    'name' => $response,
+                    'name' => class_basename($response),
+                    'phpdoc' => $phpdoc,
                 ]
             );
         });

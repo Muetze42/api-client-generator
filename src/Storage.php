@@ -86,6 +86,7 @@ class Storage
         $contents = $this->packageDisk->get($stubPath);
 
         $replaces = Arr::mapWithKeys($replaces, fn (mixed $value, string $key) => ['{' . $key . '}' => $value]);
+        $replaces["\t"] = '    ';
 
         if (is_null($contents)) {
             throw new FileNotFoundException(sprintf('The stub "%s" does not exist.', $stubPath));
