@@ -1,6 +1,6 @@
 <?php
 
-namespace NormanHuth\ApiGenerator\Generators;
+namespace NormanHuth\ApiGenerator\Generators\Api;
 
 use NormanHuth\ApiGenerator\Contracts\GeneratorInterface;
 use NormanHuth\ApiGenerator\Resources\ApiResource;
@@ -31,11 +31,6 @@ abstract class AbstractGenerator implements GeneratorInterface
      * The ApiResource instance.
      */
     public ApiResource $resource;
-
-    /**
-     * The name of the client.
-     */
-    public string $clientName;
 
     /**
      * Create a new Generator instance.

@@ -4,7 +4,7 @@ namespace NormanHuth\ApiGenerator\Parsers;
 
 use Illuminate\Support\Arr;
 use NormanHuth\ApiGenerator\Enums\AuthenticationEnum;
-use NormanHuth\ApiGenerator\Generators\LaravelHttpGenerator;
+use NormanHuth\ApiGenerator\Generators\Api\LaravelHttpGenerator;
 use NormanHuth\ApiGenerator\Resources\ApiResource;
 use NormanHuth\ApiGenerator\Storage;
 

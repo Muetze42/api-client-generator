@@ -1,9 +1,9 @@
 <?php
 
-namespace NormanHuth\ApiGenerator\Generators;
+namespace NormanHuth\ApiGenerator\Generators\Api;
 
 use Illuminate\Support\Traits\Conditionable;
-use NormanHuth\ApiGenerator\Generators\Concerns\GeneratorTrait;
+use NormanHuth\ApiGenerator\Concerns\GeneratorTrait;
 use NormanHuth\ApiGenerator\Resources\MethodResource;
 
 class LaravelHttpGenerator extends AbstractGenerator

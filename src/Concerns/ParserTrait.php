@@ -1,6 +1,6 @@
 <?php
 
-namespace NormanHuth\ApiGenerator\Parsers\Concerns;
+namespace NormanHuth\ApiGenerator\Concerns;
 
 use NormanHuth\ApiGenerator\Resources\ArgumentResource;
 use NormanHuth\ApiGenerator\Resources\MethodResource;

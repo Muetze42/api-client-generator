@@ -1,6 +1,6 @@
 <?php
 
-namespace NormanHuth\ApiGenerator\Generators\Concerns;
+namespace NormanHuth\ApiGenerator\Concerns;
 
 use Illuminate\Support\Str;
 use NormanHuth\ApiGenerator\Resources\ArgumentResource;
@@ -151,7 +151,7 @@ trait GeneratorTrait
             $default = $default ? 'true' : 'false';
         }
 
-        return in_array($type, ['int', 'bool']) ? ' = ' . $default : ' = \'' . $default . '\'';
+        return in_array($type, ['int', 'bool', 'float']) ? ' = ' . $default : ' = \'' . $default . '\'';
     }
 
     /**

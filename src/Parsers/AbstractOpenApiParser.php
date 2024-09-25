@@ -3,8 +3,8 @@
 namespace NormanHuth\ApiGenerator\Parsers;
 
 use Illuminate\Support\Str;
+use NormanHuth\ApiGenerator\Concerns\ParserTrait;
 use NormanHuth\ApiGenerator\Exceptions\GeneratorException;
-use NormanHuth\ApiGenerator\Parsers\Concerns\ParserTrait;
 use NormanHuth\ApiGenerator\Resources\ApiResource;
 use NormanHuth\Library\Support\Cast;
 
