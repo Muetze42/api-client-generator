@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 use NormanHuth\ApiGenerator\Resources\ArgumentResource;
 use NormanHuth\ApiGenerator\Resources\MethodResource;
 
-trait ResolveMethodTrait
+trait GeneratorTrait
 {
     /**
      * @param  \NormanHuth\ApiGenerator\Resources\MethodResource  $methodResource
@@ -152,5 +152,19 @@ trait ResolveMethodTrait
         }
 
         return in_array($type, ['int', 'bool']) ? ' = ' . $default : ' = \'' . $default . '\'';
+    }
+
+    /**
+     * @param  string|string[]  $namespaces
+     * @return string
+     */
+    protected function getNamespace(array|string $namespaces = []): string
+    {
+        return implode('\\', array_merge([
+            'App',
+            'Http',
+            'Clients',
+            explode(' ', $this->resource->clientName)[0],
+        ], (array) $namespaces));
     }
 }

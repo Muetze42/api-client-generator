@@ -3,13 +3,13 @@
 namespace NormanHuth\ApiGenerator\Generators;
 
 use Illuminate\Support\Traits\Conditionable;
-use NormanHuth\ApiGenerator\Generators\Concerns\ResolveMethodTrait;
+use NormanHuth\ApiGenerator\Generators\Concerns\GeneratorTrait;
 use NormanHuth\ApiGenerator\Resources\MethodResource;
 
 class LaravelHttpGenerator extends AbstractGenerator
 {
     use Conditionable;
-    use ResolveMethodTrait;
+    use GeneratorTrait;
 
     /**
      * @var array<string, mixed>
@@ -67,19 +67,5 @@ class LaravelHttpGenerator extends AbstractGenerator
                 'name' => $trait,
             ]);
         });
-    }
-
-    /**
-     * @param  string|string[]  $namespaces
-     * @return string
-     */
-    protected function getNamespace(array|string $namespaces = []): string
-    {
-        return implode('\\', array_merge([
-            'App',
-            'Http',
-            'Clients',
-            explode(' ', $this->resource->clientName)[0],
-        ], (array) $namespaces));
     }
 }
