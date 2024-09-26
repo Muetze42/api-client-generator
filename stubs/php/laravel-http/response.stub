@@ -27,7 +27,7 @@ class {name} extends Response
             return null;
         }
 
-        $data = $this->json();
+        $data = $this->json({key});
 
         return is_array($data) ? $data : null;
     }

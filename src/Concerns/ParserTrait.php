@@ -41,8 +41,12 @@ trait ParserTrait
 
                 $this->resolveArguments($instance, (new Cast($data['parameters']))->toArray());
 
-                if ($response = $this->resolveResponse(data_get($data, 'responses.200.schema'), $methodName)) {
-                    $instance->response($response);
+                $schema = data_get($data, 'responses.200.schema');
+                if ($response = $this->resolveResponse($schema, $methodName)) {
+                    $instance->response([
+                        'schema' => $schema,
+                        'data' => $response,
+                    ]);
                 }
 
                 $this->resource->addMethod($instance);

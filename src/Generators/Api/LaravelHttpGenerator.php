@@ -32,7 +32,11 @@ class LaravelHttpGenerator extends AbstractGenerator
             if ($response == $this->defaultResponse) {
                 return;
             }
-            $phpdoc = $this->phpDoc($this->responses[$response]);
+            $key = data_get($this->responses[$response]['schema'], 'items.$ref', '');
+            if ($key) {
+                $key = '\'' . basename($key) . '\'';
+            }
+            $phpdoc = $this->phpDoc($this->responses[$response]['data']);
 
             $this->storage->write(
                 'php/laravel-http/response',
@@ -41,6 +45,7 @@ class LaravelHttpGenerator extends AbstractGenerator
                     'namespace' => $this->getNamespace('Responses'),
                     'name' => class_basename($response),
                     'phpdoc' => $phpdoc,
+                    'key' => $key,
                 ]
             );
         });
