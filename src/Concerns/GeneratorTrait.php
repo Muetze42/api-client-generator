@@ -48,7 +48,7 @@ trait GeneratorTrait
         $params = [];
         $path = $methodResource->path;
         $summary = trim($methodResource->summary);
-        if ($summary && ! str_ends_with($summary, '.')) {
+        if ($summary && !str_ends_with($summary, '.')) {
             $summary .= '.';
         }
 
@@ -84,12 +84,12 @@ trait GeneratorTrait
                     );
                 }
 
-                if (! $argumentResource->required && ! $argumentResource->hasDefault) {
+                if (!$argumentResource->required && !$argumentResource->hasDefault) {
                     $argument[] = '= null';
                 }
 
                 $argumentString = implode(' ', $argument);
-                if (! $argumentResource->required && $type != 'mixed') {
+                if (!$argumentResource->required && $type != 'mixed') {
                     $argumentString = '?' . $argumentString;
                     $type = $type . '|null';
                 }
@@ -114,7 +114,7 @@ trait GeneratorTrait
         $attributesString = '';
         $attributes = array_filter($attributes);
 
-        if (! empty($attributes)) {
+        if (!empty($attributes)) {
             $attributesString = ", \n";
             foreach ($attributes as $key => $items) {
                 $attributesString .= "\t\t\t$key: [";
@@ -134,7 +134,7 @@ trait GeneratorTrait
             $path = substr($path, 0, -5);
         }
 
-        $isJson = in_array('application/json', $methodResource->returnType) && ! is_null($methodResource->response);
+        $isJson = in_array('application/json', $methodResource->returnType) && !is_null($methodResource->response);
 
         $response = $isJson ?
             $this->getNamespace(['Responses', Str::ucfirst($methodResource->name) . 'Response']) :
@@ -165,14 +165,17 @@ trait GeneratorTrait
         }
 
         $pre = "\t *";
+        $properties = $data;
 
         $content = 'array{';
-        if (isset($data['type']) && $data['type'] == 'array') {
+        if (isset($data['type']) && $data['type'] == 'array' && isset($data['properties'])) {
             $content = 'array{array-key, array{';
+            $properties = $properties['properties'];
             $level++;
         }
-
-        $properties = $data['properties'] ?? $data;
+        if (isset($properties['type']) && isset($properties['properties'])) {
+            $properties = $properties['properties'];
+        }
 
         foreach ($properties as $key => $value) {
             $content .= "\n";
@@ -184,16 +187,25 @@ trait GeneratorTrait
 
         $content .= "\n" . $pre;
         if ($level) {
-            $content .= str_repeat("\t", $level);
+            $content .= str_repeat("\t", $level - 1);
         }
-        $content .= ' }';
+        $content .= '}';
 
         if (isset($data['type']) && $data['type'] == 'array') {
+            $level = $level - 2;
+            if ($level < 0) {
+                $level = 0;
+            }
             $content .= "\n" . $pre;
-            $content .= str_repeat("\t", $level - 1) . '}';
+            $content .= str_repeat("\t", $level) . '}';
         }
 
-        return str_replace('*}', '* }', $content);
+        $replacements = [
+            '*}' => '* }',
+            $pre . " }\n" . $pre . ' }' => $pre . ' }}',
+        ];
+
+        return str_replace(array_keys($replacements), array_values($replacements), $content);
     }
 
     /**
