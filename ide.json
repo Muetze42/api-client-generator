@@ -1,0 +1,26 @@
+{
+  "$schema": "https://laravel-ide.com/schema/laravel-ide-v2.json",
+  "completions": [
+    {
+      "complete": "directoryFiles",
+      "options": {
+        "directory": "/stubs",
+        "suffixToClear": ".stub"
+      },
+      "condition": [
+        {
+          "classFqn": [
+            "\\NormanHuth\\ApiGenerator\\Storage"
+          ],
+          "methodNames": [
+            "stub",
+            "write"
+          ],
+          "parameters": [
+            1
+          ]
+        }
+      ]
+    }
+  ]
+}

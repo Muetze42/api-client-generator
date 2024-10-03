@@ -1,0 +1,53 @@
+{
+    "name": "norman-huth/api-client-generator",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "NormanHuth\\ApiGenerator\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Norman Huth",
+            "homepage": "https://huth.it"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "ext-json": "*",
+        "illuminate/config": "^9.0|^10.0|^11.0",
+        "illuminate/container": "^9.0|^10.0|^11.0",
+        "illuminate/filesystem": "^9.0|^10.0|^11.0",
+        "illuminate/support": "^9.0|^10.0|^11.0",
+        "league/flysystem": "^3.28",
+        "norman-huth/php-library": "^2.14"
+    },
+    "require-dev": {
+        "illuminate/http": "^9.0|^10.0|^11.0",
+        "laravel/pint": "^1.17",
+        "phpmd/phpmd": "^2.15",
+        "phpstan/phpstan": "^1.12"
+    },
+    "scripts": {
+        "stan": "./vendor/bin/phpstan analyse -v --ansi",
+        "pint": "./vendor/bin/pint --ansi",
+        "phpmd": "./vendor/bin/phpmd src ansi phpmd.xml",
+        "checks": [
+            "@pint",
+            "@stan"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "scripts-descriptions": {
+        "stan": "Run static analysis to find bugs",
+        "pint": "Fix code style issues",
+        "phpmd": "Look for several potential problems within the source"
+    },
+    "scripts-aliases": {
+        "checks": [
+            "c"
+        ]
+    }
+}

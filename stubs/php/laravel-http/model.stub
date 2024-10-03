@@ -1,0 +1,22 @@
+<?php
+
+namespace {namespace};
+
+use Illuminate\Database\Eloquent\Collection;
+
+class {name} extends AbstractModel
+{
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, mixed>
+     */
+    protected $casts = [{casts}];
+
+    /**
+     * The attributes that are required.
+     *
+     * @var string[]
+     */
+    protected array $requiredAttributes = [{required}];{methods}
+}

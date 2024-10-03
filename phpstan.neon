@@ -1,0 +1,21 @@
+parameters:
+  paths:
+    - src/
+  reportUnmatchedIgnoredErrors: false
+
+  level: 9
+
+  ignoreErrors:
+    - identifier: foreach.nonIterable
+    - identifier: offsetAccess.nonOffsetAccessible
+    - identifier: offsetAccess.notFound
+    - identifier: isset.offset
+    -
+      message: '#Property NormanHuth\\ApiGenerator\\Parsers\\AbstractOpenApiParser\:\:\$data \(array\<string, mixed\>\) does not accept array\<int, string\>\.#'
+      paths:
+        - src/Parsers/*
+#    -
+#      message: "#Unsafe usage of new static#"
+#      paths:
+#        - src/Traits/*
+#        - src/*/Concerns/*

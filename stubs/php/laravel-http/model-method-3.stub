@@ -1,0 +1,9 @@
+    /**
+     * @todo Description
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, \{target}>
+     */
+    public function {name}(): Collection
+    {
+        return $this->hasMany('{attribute}', {target-model}::class);
+    }

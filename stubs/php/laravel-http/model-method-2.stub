@@ -1,0 +1,9 @@
+    /**
+     * @todo Description
+     *
+     * @return \{target}
+     */
+    public function {name}(): {target-model}
+    {
+        return $this->hasOne('{attribute}', {target-model}::class);
+    }

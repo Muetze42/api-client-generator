@@ -1,0 +1,11 @@
+    /**
+     * {summary}
+     *
+{params}
+     *
+     * @throws \Illuminate\Http\Client\ConnectionException
+     */
+    public function {name}({arguments}): {response}
+    {
+        return new {Name}Response($this->request('{method}', {path}{attributes}));
+    }

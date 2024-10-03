@@ -1,0 +1,9 @@
+    /**
+     * @todo Description
+     *
+     * @return {return-type}
+     */
+    public function {name}(): {return-type}
+    {
+        return $this->getAttribute('{attribute}');
+    }
